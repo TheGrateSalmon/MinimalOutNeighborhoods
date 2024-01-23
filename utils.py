@@ -58,12 +58,12 @@ class FLattice(nx.DiGraph):
     def closed_out_neighborhood(self, nodes):
         if not nodes:
             return {}
-        return ft.reduce(lambda neighborhood, node: neighborhood | dict(self[node]), nodes, {})
+        return set(ft.reduce(lambda neighborhood, node: neighborhood | dict(self[node]), nodes, {}).keys()) | set(nodes)
         
     def open_out_neighborhood(self, nodes):
         neighborhood = self.closed_out_neighborhood(nodes)
         for node in nodes: neighborhood.pop(node, None)
-        return neighborhood 
+        return set(neighborhood.keys())
 
     def plot_graph(self, **kwargs):
         pos = {node: node for node in self.nodes}
