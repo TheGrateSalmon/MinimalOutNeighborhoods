@@ -15,22 +15,30 @@ def main():
     subset_outsizes = {}
     for k in range(len(G.valid_nodes)+1):
         vertices = min((subset for subset in it.combinations(G.valid_nodes, r=k)), 
-                        key=lambda x: len(G.open_out_neighborhood(x)),
+                        key=lambda x: len(G.closed_out_neighborhood(x)),
                         default=0)
         subset_outsizes[k] = vertices
 
     # Joe's conjecture that ball minimizes neighborhood size
     hamming_ball = [(0,0), (1,0), (-1,0), (-1,1), (1,1), (1,-1), (-1,-1)]
-    joe_conj = len(G.open_out_neighborhood(hamming_ball)) <= len(G.open_out_neighborhood(subset_outsizes[len(hamming_ball)]))
+    joe_conj = len(G.closed_out_neighborhood(hamming_ball)) <= len(G.closed_out_neighborhood(subset_outsizes[len(hamming_ball)]))
     print(f'Joe\'s bold conjecture: {joe_conj}')
-    
+    if not joe_conj:
+        print(f'Counterexample\n'
+              f'--------------\n'
+              f'Hamming ball vertices: {hamming_ball}\n'
+              f'Hamming ball closed out-neighborhood: {G.closed_out_neighborhood(hamming_ball).keys()}'
+              f'Hamming ball neighborhoods size: {len(G.closed_out_neighborhood(hamming_ball))}\n'
+              f'Subset vertices: {subset_outsizes[len(hamming_ball)]}\n'
+              f'Subset closed out-neighborhood: {G.closed_out_neighborhood(subset_outsizes[len(hamming_ball)]).keys()}'
+              f'Subset neighborhood size: {len(G.closed_out_neighborhood(subset_outsizes[len(hamming_ball)]))}')
     # G.plot_graph()
-    plt.title('Minimum Size of Neighborhoods vs Subset Size')
+    plt.title('Min Size of (Closed) Out-Neighborhoods')
     plt.xlabel('Size of Subset')
-    plt.ylabel('Minimum Size of Neighborhood')
-    plt.bar(subset_outsizes.keys(), [len(G.open_out_neighborhood(subset)) for subset in subset_outsizes.values()])
+    plt.ylabel('Min Size of (Closed) Out-Neighborhood')
+    plt.bar(subset_outsizes.keys(), [len(G.closed_out_neighborhood(subset)) for subset in subset_outsizes.values()])
     plt.xticks(list(subset_outsizes.keys()))
-    plt.savefig(Path(__file__).parent/ 'plots' / f'r-{r}')
+    plt.savefig(Path(__file__).parent/ 'plots' / f'closed_r-{r}')
     plt.show()
 
 
