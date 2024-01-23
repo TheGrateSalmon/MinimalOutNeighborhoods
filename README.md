@@ -16,4 +16,5 @@ _Nicholas' big conjecture_: In particular, some, but not all, minimizers can be 
 
 _Joe's bold conjecture_: The answer to Question 2 is yes.
 
+![F-lattice](./plots/F-2.png)
 ![minimal bar plot](./plots/r-2.png)
